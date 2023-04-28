@@ -24,7 +24,7 @@ export async function main() {
         let AppSettings: string = core.getInput('app-settings-json', {required: false});
         let ConnectionStrings: string = core.getInput('connection-strings-json', {required: false});
         let ConfigurationSettings: string = core.getInput('general-settings-json', {required: false});
-	let groupName: string = core.getInput('group-name', {required: false}) || undefined;
+	    let resourceGroupName: string = core.getInput('group-name', {required: false}) || undefined;
         const maskInputs: string = core.getInput('mask-inputs', { required: false }).toLowerCase();
         let applicationURL: string;
 
@@ -35,10 +35,13 @@ export async function main() {
         // Validating parsed inputs
         let endpoint: IAuthorizationHandler = await getHandler();
         console.log("Got service connection details for Azure App Service: " + webAppName);
-
-		let appDetails = await AzureResourceFilterUtility.getAppDetails(endpoint, webAppName, groupName);
-        let resourceGroupName = appDetails["resourceGroupName"];
-		console.log("Resource Group : "+ resourceGroupName);
+        
+        if(!resourceGroupName) {
+            
+            let appDetails = await AzureResourceFilterUtility.getAppDetails(endpoint, webAppName);
+            resourceGroupName = appDetails["resourceGroupName"];
+            console.log("Resource Group : "+ resourceGroupName);
+        } 
 
         let appService: AzureAppService = new AzureAppService(endpoint, resourceGroupName, webAppName, slotName);
         let appServiceUtility: AzureAppServiceUtility = new AzureAppServiceUtility(appService);

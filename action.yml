@@ -5,6 +5,9 @@ inputs:
   app-name: # id of input
     description: 'Name of the Azure Web App'
     required: true
+  group-name: # id of input
+    description: 'Name of the Resource Group'
+    required: false
   slot-name: #id of input
     description: 'Name of an existing slot other than the production slot. Default value is production'
     required: false
